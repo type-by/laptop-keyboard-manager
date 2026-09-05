@@ -1,88 +1,44 @@
-\# ⌨️ Laptop Internal Keyboard Manager (Hardware-Level Filter)
+# ⌨️ Laptop Internal Keyboard Manager (Hardware-Level Filter)
 
+A lightweight Windows GUI utility designed to isolate and lock a laptop's built-in PS/2 keyboard at the kernel/driver level while keeping external USB and wireless keyboards fully functional.
 
+Perfect for placing external mechanical keyboards directly on top of your laptop or resolving unwanted inputs from broken built-in keys.
 
-A lightweight Windows GUI utility designed to lock the laptop's built-in PS/2 keyboard at the hardware/driver level while keeping external USB and wireless HID keyboards fully functional.
+---
 
+## 🚀 Step-by-Step User Guide (For New Users)
 
+Since Windows protects the internal keyboard as a **Critical System Device**, a one-time kernel driver registration is required. Follow these steps on any fresh computer:
 
-Ideal for users who want to place an external mechanical keyboard directly on top of their laptop, or bypass a malfunctioning built-in keyboard with phantom keystrokes.
+### 1. Initial Setup (One-time only)
+1. Download or clone this repository to a folder on your computer.
+2. Right-click on **`Kurulum.bat`** and select **Run as Administrator**.
+3. A command prompt will confirm that the driver has been installed.
+4. **Restart your PC once.** (Crucial: Windows kernel must load the filter driver upon boot).
 
+### 2. Daily Usage
+- Run **`LaptopKlavyeYonetici.exe`**.
+- Click **"Klavyeyi Kilitle" (Lock Keyboard)**: The internal keyboard will stop responding immediately. Your external keyboard will work normally.
+- You can freely close the application window (`X`); the locking process remains active as a background daemon.
+- To re-enable the internal keyboard, simply run the application again and click **"Klavyeyi Aç" (Unlock Keyboard)**.
 
+### 3. Uninstallation
+If you ever want to completely remove the driver from your system:
+- Right-click on **`Kaldir.bat`** and select **Run as Administrator**.
+- Restart your computer.
 
-\---
+---
 
+## ❓ Frequently Asked Questions & Troubleshooting
 
+- **The app closes immediately upon launching:** You forgot to restart your PC after running `Kurulum.bat`, or `interception.dll` is not in the same directory as the executable. Restart your PC and make sure the `.dll` sits alongside the `.exe`.
 
-\## ❓ Why This Project?
+- **Will this disable my external USB keyboard?** No. The filter is bound specifically to the internal PS/2 port (`device == 1`), leaving standard USB and wireless HID devices completely untouched.
 
+---
 
-
-Windows classifies the internal keyboard as a \*\*Critical System Device\*\*. Standard API hooks (`WH\_KEYBOARD\_LL`) intercept keys globally without reliable device isolation, while device manager / PnP disable commands require a full system restart. 
-
-
-
-This project solves the problem by integrating a kernel-level keyboard filter driver (\*\*Interception\*\*), isolating the internal PS/2 device ID from external HID devices without requiring reboots after the initial driver setup.
-
-
-
-\---
-
-
-
-\## ✨ Features
-
-
-
-\- \*\*Hardware-Level Filtering:\*\* Intercepts only internal PS/2 keystrokes; external USB/wireless keyboards remain unaffected.
-
-\- \*\*Instant Control:\*\* One-click Lock and Unlock toggling without restarting Windows.
-
-\- \*\*Background Daemon:\*\* Runs silently in the background even after closing the GUI window.
-
-\- \*\*Zero Heavy Dependencies:\*\* Written entirely in pure C and native Win32 API (no heavy runtimes like Python or .NET).
-
-\- \*\*Clean Unicode GUI:\*\* Native Windows interface built with Segoe UI typography.
-
-
-
-\---
-
-
-
-\## 🚀 Installation \& Usage
-
-
-
-1\. Download or clone this repository.
-
-2\. Right-click on `Kurulum.bat` and select \*\*Run as Administrator\*\* to register the kernel filter driver.
-
-3\. \*\*Restart your computer once\*\* to enable the driver in the Windows kernel.
-
-4\. Run `LaptopKlavyeYonetici.exe`:
-
-&#x20;  - Click \*\*Klavyeyi Kilitle (Lock)\*\* to suppress built-in keyboard input.
-
-&#x20;  - Click \*\*Klavyeyi Aç (Unlock)\*\* to restore normal keyboard behavior.
-
-
-
-\---
-
-
-
-\## 🛠️ Building from Source (MinGW / GCC)
-
-
-
-If you wish to compile the project yourself:
-
-
+## 🛠️ Build from Source (MinGW / GCC)
 
 ```cmd
-
 cd src
-
-gcc -mwindows -municode laptop\_lock.c -o LaptopKlavyeYonetici.exe interception.lib
-
+gcc -mwindows -municode laptop_lock.c -o LaptopKlavyeYonetici.exe interception.lib
